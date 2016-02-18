@@ -1,27 +1,27 @@
 require './employee'
 
-class Department
-  attr_reader :name, :staff, :review
+class Department < ActiveRecord::Base
+  has_many :employee
 
-  def initialize(department_name)
-    @name = department_name
-    @staff = []
-  end
+  # def initialize(department_name)
+  #   @name = department_name
+  #   @staff = []
+  # end
 
   def add_employee(new_employee)
-    @staff << new_employee
+    self.staff << new_employee
   end
 
   def department_salary
-    @staff.reduce(0.0) {|sum, e| sum + e.salary}
+    self.staff.reduce(0.0) {|sum, e| sum + e.salary}
   end
 
   def add_employee_review(review)
-    @review = review
+    self.review = review
   end
 
   def department_raise(alloted_amount)
-    raise_eligible = @staff.select {|e| yield(e)}
+    raise_eligible = self.staff.select {|e| yield(e)}
     amount = alloted_amount / raise_eligible.length
     raise_eligible.each {|e| e.raise_by_amount(amount)}
   end
